@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <router-link :to="{name: 'DoorConfig'}"><Button>Door config page</Button></router-link>
-    <router-link to="/"><button>To exp/imp table</button></router-link>
+    <router-link :to="{name: 'Darumi_config'}"><Button>DARUMI Config page</Button></router-link>
+    <router-link :to="{name: 'Darumi_table'}"><button>DARUMI Table</button></router-link>
     <router-view/>
   </div>
 </template>

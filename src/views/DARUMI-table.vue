@@ -3,10 +3,10 @@
     <h2>{{ msg }}</h2>
     <hr class="hr1">
     <!-- <div>{{ VariableProductData }}</div> -->
-    <door-config
+    <darumi-config
       v-on:receiveVariableData="handleVariable($event)"
       v-on:receiveVariationData="handleVariation($event)">
-    </door-config>
+    </darumi-config>
     <hr class="hr1">
     <div>
       <table>
@@ -23,7 +23,12 @@
           <td data-clmn="E">1</td>
           <td data-clmn="F">0</td>
           <td data-clmn="G">visible</td>
-          <td data-clmn="H" class="w15">Ціна за «Стандартне» полотно: <span class="door-price">{{ vrble.price }}</span> грн. «Стандартні» полотна: &#8596; 400mm / 600mm / 700mm / 800mm / 900mm &#8597; 2000mm </td>
+          <td data-clmn="H" class="w15">
+            Ціна за «Стандартне» полотно:
+            <span class="door-price" v-if="vrble.glass">{{ vrble.price }}</span> грн.
+            <span class="door-price" v-if="vrble.onLay">від {{ vrble.price[0] }} до {{ vrble.price[2] }}</span> грн., в залежності від вибраної кромки
+            «Стандартні» полотна: &#8596; 400mm / 600mm / 700mm / 800mm / 900mm &#8597; 2000mm
+          </td>
           <td data-clmn="I"></td>
           <!-- <td data-clmn="I" class="w30">
             <door-frame-middles v-if="ifCannelureModel(vrble.model)"></door-frame-middles>
@@ -63,11 +68,20 @@
           <td data-clmn="AP">1</td>
           <td data-clmn="AQ">1</td>
           <td data-clmn="AR"> &#8596;800mm &#8597;2000mm</td>
-          <td data-clmn="AS">Скло</td>
-          <td data-clmn="AT">{{ vrble.glass.join(', ') }}</td>
+          <td data-clmn="AS">
+            <span v-if="vrble.glass">Скло</span>
+            <span v-else-if="vrble.onLay">Декор. накладка</span>
+          </td>
+          <td data-clmn="AT">
+            <span v-if="vrble.glass">{{ vrble.glass.join(', ') }}</span>
+            <span v-if="vrble.onLay">{{ vrble.onLay.join(', ') }}</span>
+          </td>
           <td data-clmn="AU">1</td>
           <td data-clmn="AV">1</td>
-          <td data-clmn="AW">Сатин білий</td>
+          <td data-clmn="AW">
+            <span v-if="vrble.glass">{{ vrble.glassDefault }}</span>
+            <span v-if="vrble.onLay">{{ vrble.onLayDefault }}</span>
+          </td>
           <td data-clmn="AX">Коробка</td>
           <td data-clmn="AY" class="w10">{{vrble.doorFrame.join(', ') }}</td>
           <td data-clmn="AZ">1</td>
@@ -83,6 +97,11 @@
           <td data-clmn="BJ">1</td>
           <td data-clmn="BK">1</td>
           <td data-clmn="BL">{{ vrble.doorExtension[0] }}</td>
+          <td data-clmn="BH1" v-if="vrble.onLay">Кромка</td>
+          <td data-clmn="BI1" v-if="vrble.onLay" class="w10">{{ vrble.edges.join(', ') }}</td>
+          <td data-clmn="BJ1" v-if="vrble.onLay">1</td>
+          <td data-clmn="BK1" v-if="vrble.onLay">1</td>
+          <td data-clmn="BL1" v-if="vrble.onLay">{{ vrble.edgesDefault }}</td>
           <td data-clmn="BM">0</td>
           <td data-clmn="BN">default</td>
           <td data-clmn="BO">Двері DARUMI %%sep%% %%title%% %%sep%% +38 (099) 309-02-22</td>
@@ -176,27 +195,35 @@
 </template>
 
 <script>
-import DoorConfig from '../views/DoorConfig.vue'
-// import DoorFrameMiddles from '../components/doorFrameMiddles.vue'
-import TableHeaders from '../TableHeaders'
+import DarumiConfig from '../views/DARUMI-config.vue'
+// import DoorFrameMiddles from '../components/DARUMI/doorFrameMiddles.vue'
+import DarumiData from '../TM_DARUMI/DarumiDoors'
 export default {
   // components: { DoorConfig, DoorFrameMiddles },
-  components: { DoorConfig },
-  mixins: { TableHeaders },
+  components: { DarumiConfig },
+  mixins: { DarumiData },
   data () {
     return {
       msg: 'DARUMI set of decors #1 table',
       counter: 0,
-      headers: TableHeaders.TableHeaders,
+      headers: '',
       showVariablesTable: 'false',
       Variables: [],
       Variations: [],
       Cannelure: ['BORDO', 'MADRID', 'AVANT', 'SELESTA']
     }
   },
+  watch: {
+    Variables () {
+      if (this.Variables[0].onLay) this.headers = DarumiData.PanelDoorsTableHeaders
+      if (this.Variables[0].glass) this.headers = DarumiData.FrameDoorsTableHeaders
+    }
+  },
   methods: {
     handleVariable (d) {
-      this.Variables = d
+      setTimeout(() => {
+        this.Variables = d
+      }, 100)
     },
     handleVariation (d) {
       this.Variations = d

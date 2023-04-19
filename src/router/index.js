@@ -1,20 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainTable from '../views/MainTable'
-import DoorConfig from '../views/DoorConfig'
+import DarumiTable from '../views/DARUMI-table'
+import DarumiConfig from '../views/DARUMI-config'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'main',
-    component: MainTable
+    path: '/darumi_table',
+    name: 'Darumi_table',
+    component: DarumiTable
   },
   {
-    path: '/door_config',
-    name: 'DoorConfig',
-    component: DoorConfig
+    path: '/darumi_config',
+    name: 'Darumi_config',
+    component: DarumiConfig
   }
 ]
 

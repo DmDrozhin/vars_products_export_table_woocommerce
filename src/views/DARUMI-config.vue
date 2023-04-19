@@ -2,30 +2,36 @@
   <div>
     <h2>{{ msg }}</h2>
     <div class="flex-items">
-      <button @click="makeArrVarPrices()">TEST</button>
+      <button @click="refreshPage()">TEST</button>
       <!-- <button @click="createVariableRow2()">DECOR-2</button> -->
+      <div style="font-size: .6rem;">{{ queryDecor }} *** {{ typeof queryDecor }}</div>
+
       <fieldset class="flex-items">
-        <select v-model="queryDecor">
-          <option value="0">Каркасні двері. Декори-1</option>
-          <option value="1">Каркасні двері. Декори-2 WM</option>
-          <option value="2">Каркасні двері. Декори-3</option>
-          <option value="3">Каркасні двері. Декори-4</option>
-          <option value="4">Щитові двері. Декори-5</option>
-          <option value="5">Всі каркасні двері</option>
+        <select v-model="currentType" :value="currentType">
+          <option value="FrameDoors">Frame doors</option>
+          <option value="PanelDoors">Panel doors</option>
         </select>
-        <button @click="createVariable()">RUN</button>
+        <select v-model="queryDecor" :value="queryDecor">
+          <option v-for="dec in decQueryList" :key="dec.id" :value="dec">Каркасні. Декори-{{ dec + 1}}</option>
+        </select>
+        <button @click="handleRequest()">RUN1</button>
     </fieldset>
+    <button @click="refreshPage()">Refresh page</button>
       <fieldset class="flex-items">
-        <div>{{ queryModel }}</div>
-        <select v-model="queryModel" :value="queryModel">
-          <option v-for="model in modelList" :key="model.id" :value="model">{{ model }}</option>
+        <select v-model="currentType" :value="currentType">
+          <option value="FrameDoors">Frame doors</option>
+          <option value="PanelDoors">Panel doors</option>
         </select>
-        <button @click="createVariable(queryModel)">RUN</button>
+        <select v-model="queryModel" :value="queryModel">
+          <option v-for="model in modelQueryList" :key="model.id" :value="model">{{ model }}</option>
+        </select>
+        <button @click="handleRequest(queryModel)">RUN2</button>
+        <div style="font-size: .6rem;">{{ queryModel }}</div>
     </fieldset>
     </div>
     <!-- <div>{{ VariableProductData }}</div> -->
     <table>
-      <tr v-for="dr in VariableProductData" :key="dr.id" v-show="showVariablesTable">
+      <tr v-for="dr in VariableProductData" :key="dr.id" v-show="show">
         <td>{{ dr.ID }}</td>
         <td>{{ dr.model }}</td>
         <td>{{ dr.decor }}</td>
@@ -47,15 +53,14 @@
 
 <script>
 // ***************************************************************************
-import DarumiData from '../DarumiDoors'
-import DoorIMGs from '../DarumiIMGs'
-import Molded from '../DarumiMoldedProducts'
+import DarumiData from '../TM_DARUMI/DarumiDoors'
+import DoorIMGs from '../TM_DARUMI/DarumiIMGs'
+import Molded from '../TM_DARUMI/DarumiMoldedProducts'
 export default {
   mixins: [DarumiData, DoorIMGs, Molded],
   data () {
     return {
-      queryDecor: 0,
-      showVariablesTable: false,
+      show: false,
       msg: 'TM Darumi doors compilation section',
       VariableProductData: [],
       VariationProductData: [],
@@ -66,51 +71,131 @@ export default {
       Variations: Molded.Variations,
       moldPList: Molded.PriceList,
       counter: 1,
-      queryModel: 'AVANT'
+      queryModel: 'AVANT',
+      queryDecor: 1,
+      currentType: 'FrameDoors',
+      decQueryList: [0, 1, 2, 3],
+      modelQueryList: Object.keys(DarumiData.FrameDoors)
     }
   },
   // ***************************************************************************
+  computed: {
+    FrameDoorList () {
+      return Object.keys(this.FrameDoors)
+    },
+    PanelDoorList () {
+      return Object.keys(this.PanelDoors)
+    }
+  },
+
   watch: {
     VariableProductData: function () {
       this.$emit('receiveVariableData', this.VariableProductData)
-      this.bundleFrameVariation(this.VariableProductData)
+      // this.makeFrameVariation(this.VariableProductData)
     },
     VariationProductData: function () {
       this.$emit('receiveVariationData', this.VariationProductData)
+    },
+    currentType: function () {
+      if (this.currentType === 'FrameDoors') {
+        this.decQueryList = [0, 1, 2, 3]
+        this.modelQueryList = Object.keys(this.FrameDoors)
+      }
+      if (this.currentType === 'PanelDoors') {
+        this.decQueryList = [5]
+        this.modelQueryList = Object.keys(this.PanelDoors)
+      }
     }
   },
-  computed: {
-    modelList () {
-      return Object.keys(this.FrameDoors)
-    }
-  },
+
   methods: {
     // Product has Variables (parent) data and Variations of Variables (child) data. This fn creates object with data for Variable products. The data will be rendered in table at MainTable vue.
-    createVariable (DoorModel) {
-      if (DoorModel) {
-        const DoorData = this.FrameDoors[DoorModel]
-        const DoorDecor1 = DoorData.Decor1
-        const DoorDecor2 = DoorData.Decor2
-        // const DoorDecor1 = this.Decors[DoorData.Decor1]
-        // const DoorDecor2 = this.Decors[DoorData.Decor2]
-        this.bundleFrameDoor(DoorDecor1, DoorModel, DoorData, 'Decor1')
-        this.bundleFrameDoor(DoorDecor2, DoorModel, DoorData, 'Decor2')
-        return
-      }
-      const Decor = ['DecorSet1', 'DecorSet2', 'DecorSet3', 'DecorSet4', 'DecorSet5', 'DecorAll']
-      for (const model in this.FrameDoors) {
-        const data = this.FrameDoors[model]
-        if (data.Decor1 === Decor[this.queryDecor]) {
-          this.bundleFrameDoor(Decor[this.queryDecor], model, data, 'Decor1')
+    handleRequest (DoorModel) {
+      // const DoorModel = this.queryModel
+      if (this.currentType === 'FrameDoors') {
+        if (DoorModel) {
+          const DoorData = this.FrameDoors[DoorModel]
+          const DoorDecor1 = DoorData.Decor1
+          const DoorDecor2 = DoorData.Decor2
+          this.makeFrameDoor(DoorDecor1, DoorModel, DoorData, 'Decor1')
+          this.makeFrameDoor(DoorDecor2, DoorModel, DoorData, 'Decor2')
+          return
         }
-        if (data.Decor2 === Decor[this.queryDecor]) {
-          this.bundleFrameDoor(Decor[this.queryDecor], model, data, 'Decor2')
+        const Decor = ['DecorSet1', 'DecorSet2', 'DecorSet3', 'DecorSet4']
+        for (const model in this.FrameDoors) {
+          const data = this.FrameDoors[model]
+          if (data.Decor1 === Decor[this.queryDecor]) {
+            this.makeFrameDoor(Decor[this.queryDecor], model, data, 'Decor1')
+          }
+          if (data.Decor2 === Decor[this.queryDecor]) {
+            this.makeFrameDoor(Decor[this.queryDecor], model, data, 'Decor2')
+          }
+        }
+      } else if (this.currentType === 'PanelDoors') {
+        if (DoorModel) {
+          const DoorDataDec1 = Object.entries(this.PanelDoors[DoorModel])[0] // ['DecorSet5', Array(2)]
+          // const DataDec2 = Object.entries(this.PanelDoors[DoorModel])[1] // ['DecorSet2', Array(2)]
+          // const arrDec1 = this.Decors[DataDec1[0]] // DecorSet5 - ['Дуб ольс', 'Дуб боровий', 'Дуб натуральний', 'Горіх бургун', 'Горіх роял', 'Венге панга', 'Димчастий краст', 'Сірий краст', 'Сірий бетон']
+          // const arrDec2 = this.Decors[DataDec2[0]] // DecorSet2 - ['Білий матовий']
+          this.makePanelDoor(DoorModel, DoorDataDec1, 'Decor1')
+          // this.makePanelDoor(DoorModel, DataDec2)
         }
       }
     },
 
-    // This fn goes throw all door data and bundle it to 'obj'
-    bundleFrameDoor (set, model, data, priceGrp) {
+    // This fn goes through all PANEL door data and assemble it to 'obj'
+    // FrDr [ ID, model, decor, price, glass, glassDefault, panel, category, pictures, doorFrame, doorJamb, doorExtension, priceGrp ]
+    makePanelDoor (model, data, priceGrp) {
+      const arr = []
+      const arrDecors = this.Decors[data[0]]
+      arrDecors.forEach(dec => {
+        const obj = {}
+        // 1) Adding door ID
+        obj.ID = this.counter
+        this.counter = obj.ID + 1
+        // 2) Adding door model
+        obj.model = model
+        // 3) Adding door decor
+        obj.decor = dec
+        // 4) Adding arr with prices
+        obj.price = Object.values(data[1][0]) // arr with three prices in this case
+        // 5) Adding object with Edges and cor.prices
+        obj.prices = data[1][0]
+        // 6) Adding OnLays
+        const onLaySet = Object.values(data[1][1])[0] // onLay1 / onLay2 / onLay3 - without dec
+        obj.onLay = this.Decors[onLaySet]
+        obj.onLayDefault = this.Decors[onLaySet][0]
+        // 7) Adding Edges
+        obj.edges = Object.keys(data[1][0])
+        obj.edgesDefault = Object.keys(data[1][0])[0]
+        // 8) Adding price groupe
+        obj.priceGrp = priceGrp
+        // 9) Adding true/false if has vertical lines style
+        const ifVLines = () => {
+          onLaySet === 'OnLay2' ? obj.VLines = true : obj.VLines = false
+        }
+        ifVLines()
+        // 10) Adding categories
+        // (model, decor, frameDr, vlines, modern, panel)
+        obj.category = this.setCategory(model, dec, false, obj.VLines, true, onLaySet)
+        // 11) Adding doors images
+        obj.pictures = this.setImages(model, dec)
+        // 12) Adding doors-frames
+        obj.doorFrame = this.Variations[priceGrp].DoorCase
+        // 13) Adding door-jamb
+        obj.doorJamb = this.Variations[priceGrp].Jamb
+        // 14) Adding door extension panels
+        obj.doorExtension = this.Variations[priceGrp].Extension
+
+        console.log(obj)
+        arr.push(obj)
+        // console.log()
+      })
+      this.VariableProductData.push(...arr)
+    },
+    // This fn goes through all FRAME door data and assemble it to 'obj'
+    makeFrameDoor (set, model, data, priceGrp) {
+      // FrDr [ ID, model, decor, price, glass, glassDefault, panel, category, pictures, doorFrame, doorJamb, doorExtension, priceGrp ]
       const arr = []
       this.Decors[set].forEach(dec => {
         const obj = {}
@@ -128,7 +213,10 @@ export default {
         // 5) Adding glass
         const GSet = ['GlassSet1', 'GlassSet2', 'GlassSet3', 'GlassSet4', 'GlassSet5']
         GSet.forEach(glassSet => {
-          if (data.GlassSet === glassSet) obj.glass = this.Decors[glassSet]
+          if (data.GlassSet === glassSet) {
+            obj.glass = this.Decors[glassSet]
+            obj.glassDefault = this.Decors[glassSet][0]
+          }
         })
         // 6) Adding type of MDF panels
         if (data.Panel === 'Panel1') obj.panel = this.Panel1
@@ -153,8 +241,9 @@ export default {
       this.VariableProductData.push(...arr)
       // console.log(...arr)
     },
+
     // This fn takes data from Variable door (parent obj) and creates variations for it. ParentID is an ID to link Variations with Variable product
-    bundleFrameVariation (arr) {
+    makeFrameVariation (arr) {
       const mainVarArr = []
       // Loop through all current Variables
       arr.forEach(obj => {
@@ -228,8 +317,16 @@ export default {
       const c8 = `${c1}> ${style()}` // category 7
       const c9 = `${c1}> TM «ELBEGY» (Japan)` // category 8
       const c10 = `${c1}> «телескоп»` // category 9
-      const drPanel = () => panel === false ? 'Зі склом' : panel === 'Panel1' ? 'Суцільна фільонка' : 'Набірні фільонки'
-      const c11 = `${c1}> ${drPanel()}` // category 10
+      let c11 = 'Без скла -«глухе»'
+      if (frameDr) {
+        const drPanel = () => panel === false ? 'Зі склом' : panel === 'Panel1' ? 'Суцільна фільонка' : 'Набірні фільонки'
+        c11 = `${c1}> ${drPanel()}` // category 10
+      } else {
+        const drOnLay = () => panel === 'OnLay3' ? 'Без декоративних вставок' : panel === 'OnLay1' ? 'Накладна вставка з алюмінію' : 'Вставка зі скла «Lacobel»'
+        c11 = `${c1}> ${drOnLay()}` // category 10
+      }
+      //  const drPanel = () => panel === false ? 'Зі склом' : panel === 'Panel1' ? 'Суцільна //фільонка' : 'Набірні фільонки'
+      // const c11 = `${c1}> ${drPanel()}` // category 10
       return (`${c3}, ${c4}, ${c5}, ${c6}, ${c7}, ${c8}, ${c9}, ${c10}, ${c11}`)
     },
 
@@ -245,6 +342,9 @@ export default {
       })
       // console.log(URLArray)
       return URLArray
+    },
+    refreshPage () {
+      this.$router.go(0)
     }
   }
   // created () {

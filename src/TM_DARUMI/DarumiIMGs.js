@@ -1,19 +1,19 @@
 export default {
 
   DARINA: {
-    'Дуб ольс': ['03/darumi-darina-dub-ols-olo-sn.jpg', '04darumi-darina-dub-ols-olo-blackjpg'],
-    'Дуб мембау': ['04/darumi-darina-dub-membau-bg-sn.jpg', '04darumi-darina-dub-membau-bg-black.jpg'],
-    'Дуб боровий': ['04/darumi-darina-dub-borovyj-bo-sn.jpg', '04darumi-darina-dub-borovyj-bo-black.jpg'],
-    'Дуб натуральний': ['04/darumi-darina-dub-naturalnyj-no-sn.jpg', '04darumi-darina-dub-naturalnyj-no-black.jpg'],
-    'Дуб честнат': ['04/darumi-darina-dub-chestnat-oc-sn.jpg', '04darumi-darina-dub-chestnat-oc-black.jpg'],
-    'Венге панга': ['04/darumi-darina-venge-panga-wp-sn.jpg', '04darumi-darina-venge-panga-wp-black.jpg'],
-    'Білий текстурний': ['04/darumi-darina-bilyj-teksturnyj-wh-sn.jpg', '04darumi-darina-bilyj-teksturnyj-wh-black.jpg'],
-    'Димчастий краст': ['04/darumi-darina-dymchastyj-krast-sc-sn.jpg', '04darumi-darina-dymchastyj-krast-sc-black.jpg'],
-    'Сірий краст': ['03/darumi-darina-siryj-krast-gc-sn.jpg', '04darumi-darina-siryj-krast-gc-black.jpg'],
-    'Сірий бетон': ['04/darumi-darina-siryj-beton-gb-sn.jpg', '04darumi-darina-siryj-beton-gb-black.jpg'],
-    'Горіх бургун': ['04/darumi-darina-gorih-burgun-bn-sn.jpg', '04darumi-darina-gorih-burgun-bn-black.jpg'],
-    'Горіх роял': ['04/darumi-darina-gorih-royal-rn-sn.jpg', '04darumi-darina-gorih-royal-rn-black.jpg'],
-    'Білий матовий': ['04/darumi-darina-bilyj-matovyj-wm-sn.jpg', '04darumi-darina-bilyj-matovyj-wm-black.jpg']
+    'Дуб ольс': ['03/darumi-darina-dub-ols-olo-sn.jpg', '04/darumi-darina-dub-ols-olo-black.jpg'],
+    'Дуб мембау': ['04/darumi-darina-dub-membau-bg-sn.jpg', '04/darumi-darina-dub-membau-bg-black.jpg'],
+    'Дуб боровий': ['04/darumi-darina-dub-borovyj-bo-sn.jpg', '04/darumi-darina-dub-borovyj-bo-black.jpg'],
+    'Дуб натуральний': ['04/darumi-darina-dub-naturalnyj-no-sn.jpg', '04/darumi-darina-dub-naturalnyj-no-black.jpg'],
+    'Дуб честнат': ['04/darumi-darina-dub-chestnat-oc-sn.jpg', '04/darumi-darina-dub-chestnat-oc-black.jpg'],
+    'Венге панга': ['04/darumi-darina-venge-panga-wp-sn.jpg', '04/darumi-darina-venge-panga-wp-black.jpg'],
+    'Білий текстурний': ['04/darumi-darina-bilyj-teksturnyj-wh-sn.jpg', '04/darumi-darina-bilyj-teksturnyj-wh-black.jpg'],
+    'Димчастий краст': ['04/darumi-darina-dymchastyj-krast-sc-sn.jpg', '04/darumi-darina-dymchastyj-krast-sc-black.jpg'],
+    'Сірий краст': ['03/darumi-darina-siryj-krast-gc-sn.jpg', '04/darumi-darina-siryj-krast-gc-black.jpg'],
+    'Сірий бетон': ['04/darumi-darina-siryj-beton-gb-sn.jpg', '04/darumi-darina-siryj-beton-gb-black.jpg'],
+    'Горіх бургун': ['04/darumi-darina-gorih-burgun-bn-sn.jpg', '04/darumi-darina-gorih-burgun-bn-black.jpg'],
+    'Горіх роял': ['04/darumi-darina-gorih-royal-rn-sn.jpg', '04/darumi-darina-gorih-royal-rn-black.jpg'],
+    'Білий матовий': ['04/darumi-darina-bilyj-matovyj-wm-sn.jpg', '04/darumi-darina-bilyj-matovyj-wm-black.jpg']
   },
   // Дуб ольс - DO
   // Дуб мембау - DM
@@ -220,7 +220,7 @@ export default {
     'Сірий бетон': ['04/darumi-plato-siryj-beton-bt.jpg'],
     'Білий матовий': ['04/darumi-plato-bilyj-matovyj-wm.jpg']
   },
-  'PLATO PTL-03': {
+  'PLATO LINE PTL-03': {
     'Дуб ольс': ['04/darumi-plato-ptl-03-dub-ols-olo.jpg'],
     'Дуб боровий': ['04/darumi-plato-ptl-03-dub-borovyj-bo.jpg'],
     'Дуб натуральний': ['04/darumi-plato-ptl-03-dub-naturalnyj-no.jpg'],
@@ -232,7 +232,7 @@ export default {
     'Сірий бетон': ['04/darumi-plato-ptl-03-siryj-beton-bt.jpg'],
     'Білий матовий': ['04/darumi-plato-ptl-03-bilyj-matovyj-wm.jpg']
   },
-  'PLATO PTL-04': {
+  'PLATO LINE PTL-04': {
     'Дуб ольс': ['04/darumi-plato-ptl-04-dub-ols-olo.jpg'],
     'Дуб боровий': ['04/darumi-plato-ptl-04-dub-borovyj-bo.jpg'],
     'Дуб натуральний': ['04/darumi-plato-ptl-04-dub-naturalnyj-no.jpg'],
