@@ -70,7 +70,7 @@
           <td data-clmn="AR"> &#8596;800mm &#8597;2000mm</td>
           <td data-clmn="AS">
             <span v-if="vrble.glass">Скло</span>
-            <span v-else-if="vrble.onLay">Декор. накладка</span>
+            <span v-if="vrble.onLay">Декор. накладка</span>
           </td>
           <td data-clmn="AT">
             <span v-if="vrble.glass">{{ vrble.glass.join(', ') }}</span>
@@ -158,8 +158,12 @@
           <td data-clmn="AP"></td>
           <td data-clmn="AQ">1</td>
           <td data-clmn="AR"></td>
-          <td data-clmn="AS">Скло</td>
-          <td data-clmn="AT">{{ vrn.glass }}</td>
+          <td data-clmn="AS">
+            <span v-if="vrn.glass">Скло</span>
+          </td>
+          <td data-clmn="AT">
+            <span v-if="vrn.glass">{{ vrn.glass }}</span>
+          </td>
           <td data-clmn="AU"></td>
           <td data-clmn="AV">1</td>
           <td data-clmn="AW"></td>
@@ -178,6 +182,11 @@
           <td data-clmn="BJ"></td>
           <td data-clmn="BK">1</td>
           <td data-clmn="BL"></td>
+          <td data-clmn="BH1" v-if="vrn.onLay">Кромка</td>
+          <td data-clmn="BI1" v-if="vrn.onLay" class="w10">{{ vrn.edge }}</td>
+          <td data-clmn="BJ1" v-if="vrn.onLay"></td>
+          <td data-clmn="BK1" v-if="vrn.onLay">1</td>
+          <td data-clmn="BL1" v-if="vrn.onLay"></td>
           <td data-clmn="BM">0</td>
           <td data-clmn="BN"></td>
           <td data-clmn="BO"></td>
@@ -204,7 +213,7 @@ export default {
   mixins: { DarumiData },
   data () {
     return {
-      msg: 'DARUMI set of decors #1 table',
+      msg: 'DARUMI',
       counter: 0,
       headers: '',
       showVariablesTable: 'false',
@@ -221,9 +230,7 @@ export default {
   },
   methods: {
     handleVariable (d) {
-      setTimeout(() => {
-        this.Variables = d
-      }, 100)
+      this.Variables = d
     },
     handleVariation (d) {
       this.Variations = d
@@ -232,6 +239,12 @@ export default {
       if (this.Cannelure.includes(md)) {
         return true
       }
+    },
+    refreshPage () {
+      return new Promise((resolve, reject) => {
+        this.$router.go(0)
+        resolve()
+      })
     }
   }
 }

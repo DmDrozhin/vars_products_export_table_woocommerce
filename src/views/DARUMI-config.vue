@@ -4,7 +4,7 @@
     <div class="flex-items">
       <button @click="refreshPage()">TEST</button>
       <!-- <button @click="createVariableRow2()">DECOR-2</button> -->
-      <div style="font-size: .6rem;">{{ queryDecor }} *** {{ typeof queryDecor }}</div>
+      <div style="font-size: .6rem;">{{ queryDecor }} *** {{ typeof queryDecor }} *** {{ currentType }}</div>
 
       <fieldset class="flex-items">
         <select v-model="currentType" :value="currentType">
@@ -91,7 +91,8 @@ export default {
   watch: {
     VariableProductData: function () {
       this.$emit('receiveVariableData', this.VariableProductData)
-      // this.makeFrameVariation(this.VariableProductData)
+      if (this.currentType === 'FrameDoors') this.makeFrameVariation(this.VariableProductData)
+      if (this.currentType === 'PanelDoors') this.makePanelVariation(this.VariableProductData)
     },
     VariationProductData: function () {
       this.$emit('receiveVariationData', this.VariationProductData)
@@ -133,12 +134,12 @@ export default {
         }
       } else if (this.currentType === 'PanelDoors') {
         if (DoorModel) {
-          const DoorDataDec1 = Object.entries(this.PanelDoors[DoorModel])[0] // ['DecorSet5', Array(2)]
-          // const DataDec2 = Object.entries(this.PanelDoors[DoorModel])[1] // ['DecorSet2', Array(2)]
-          // const arrDec1 = this.Decors[DataDec1[0]] // DecorSet5 - ['Дуб ольс', 'Дуб боровий', 'Дуб натуральний', 'Горіх бургун', 'Горіх роял', 'Венге панга', 'Димчастий краст', 'Сірий краст', 'Сірий бетон']
-          // const arrDec2 = this.Decors[DataDec2[0]] // DecorSet2 - ['Білий матовий']
+          const DoorDataDec1 = Object.entries(this.PanelDoors[DoorModel])[0]
+          // result ['DecorSet5', Array(2)]
+          const DoorDataDec2 = Object.entries(this.PanelDoors[DoorModel])[1]
+          // result ['DecorSet2', Array(2)]
           this.makePanelDoor(DoorModel, DoorDataDec1, 'Decor1')
-          // this.makePanelDoor(DoorModel, DataDec2)
+          this.makePanelDoor(DoorModel, DoorDataDec2, 'Decor2')
         }
       }
     },
@@ -149,6 +150,7 @@ export default {
       const arr = []
       const arrDecors = this.Decors[data[0]]
       arrDecors.forEach(dec => {
+        const onlyEdge2 = ['Сірий бетон', 'Дуб боровий']
         const obj = {}
         // 1) Adding door ID
         obj.ID = this.counter
@@ -158,16 +160,31 @@ export default {
         // 3) Adding door decor
         obj.decor = dec
         // 4) Adding arr with prices
-        obj.price = Object.values(data[1][0]) // arr with three prices in this case
+        if (onlyEdge2.includes(dec)) {
+          obj.price = Object.values(data[1][0]).slice(1) // arr with two prices
+        } else {
+          obj.price = Object.values(data[1][0]) // arr with three prices in this case
+        }
         // 5) Adding object with Edges and cor.prices
-        obj.prices = data[1][0]
+        if (onlyEdge2.includes(dec)) {
+          const newObj = { ...data[1][0] } // making clone of obj
+          delete newObj['Звичайна кромка']
+          obj.prices = newObj // obj with two edges
+        } else {
+          obj.prices = data[1][0] // obj with three edges
+        }
         // 6) Adding OnLays
         const onLaySet = Object.values(data[1][1])[0] // onLay1 / onLay2 / onLay3 - without dec
         obj.onLay = this.Decors[onLaySet]
         obj.onLayDefault = this.Decors[onLaySet][0]
         // 7) Adding Edges
-        obj.edges = Object.keys(data[1][0])
-        obj.edgesDefault = Object.keys(data[1][0])[0]
+        if (onlyEdge2.includes(dec)) {
+          obj.edges = Object.keys(data[1][0]).slice(1)
+          obj.edgesDefault = obj.edges[0]
+        } else {
+          obj.edges = Object.keys(data[1][0])
+          obj.edgesDefault = obj.edges[0]
+        }
         // 8) Adding price groupe
         obj.priceGrp = priceGrp
         // 9) Adding true/false if has vertical lines style
@@ -186,10 +203,8 @@ export default {
         obj.doorJamb = this.Variations[priceGrp].Jamb
         // 14) Adding door extension panels
         obj.doorExtension = this.Variations[priceGrp].Extension
-
-        console.log(obj)
+        // console.log(obj)
         arr.push(obj)
-        // console.log()
       })
       this.VariableProductData.push(...arr)
     },
@@ -275,6 +290,43 @@ export default {
       // console.log(mainVarArr)
       this.VariationProductData = mainVarArr
     },
+
+    makePanelVariation (arr) {
+      const mainVarArr = []
+      // Loop through all current Variables
+      arr.forEach(obj => {
+        // console.log(obj)
+        // Loop through arr of prices (Edges type prices)
+        obj.price.forEach((pce, id) => {
+          // arrPrices = Object.k
+          const edgeID = id
+          console.log('The ID: ' + edgeID)
+          const varArr = this.makeArrVarPrices(obj.priceGrp, pce)
+          varArr.forEach(el => {
+            const moldedID = Number(Object.keys(el)[0])
+            const varObj = {}
+            varObj.ParentID = obj.ID
+            varObj.ID = this.counter
+            this.counter = varObj.ID + 1
+            varObj.model = obj.model
+            varObj.decor = obj.decor
+            varObj.edge = obj.edges[id]
+            varObj.onLay = obj.onLay
+            // varObj.picture = obj.pictures[id]
+            varObj.marker = Object.keys(el)[0]
+            varObj.price = Math.round(Object.values(el)[0])
+            varObj.doorFrame = this.Variations[obj.priceGrp].Combinations[moldedID][0]
+            varObj.doorJamb = this.Variations[obj.priceGrp].Combinations[moldedID][1]
+            varObj.doorExtension = this.Variations[obj.priceGrp].Combinations[moldedID][2]
+            // console.log(varObj)
+            mainVarArr.push(varObj)
+          })
+        })
+      })
+      // console.log(mainVarArr)
+      this.VariationProductData = mainVarArr
+    },
+
     makeArrVarPrices (priceGR = 'Decor1', doorPrice = 3498) {
       const arr = []
       const path = this.moldPList[priceGR]
