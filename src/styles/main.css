@@ -80,10 +80,6 @@
     border: 1px dotted yellowgreen;
     border-radius: 0.3rem;
   }
-  table tr td {
-    padding: 0 1.5rem;
-    border-bottom: 1px dotted grey;
-  }
   /* =============================================== */
   .green{
     border: 3px solid green;
@@ -107,13 +103,24 @@
     transition: transform 1s ease;
     width: fit-content;
     margin: 0.1rem;
-  }
+  }  
   a:hover{
     transform: translate(0, -5px);
   }
+  .vue-a{
+    text-decoration: none;
+    display: inline-block;
+    padding: 0;
+    /* border: 1px solid darkmagenta; */
+    border-radius: 3px;
+    box-shadow: none;
+    transition: transform 1s ease;
+    width: fit-content;
+    margin: 0;
+  }
   .flex-items{
     display: flex;
-    justify-content: space-around;
+    justify-content: left;
     flex-wrap: wrap;
   }
   img{
@@ -122,4 +129,53 @@
   .centered {
     border: 1px solid darkmagenta;
     text-align: center;
+  }
+  table {
+    border-collapse: collapse;
+    border: 1px dotted lightgrey;
+  }
+  table tr {
+    border-bottom: 1px dotted lightgrey;
+  }
+  table th, table td {
+    border-right: 1px dotted lightgrey;
+    padding: 0 .5rem;
+  }
+  table th {
+    color: rgb(13, 86, 17);
+    font-size: 0.8rem;
+  }
+  table td {
+    color: rgb(65, 65, 65);
+    font-size: 0.8rem;
+  }
+  .w5 {
+    min-width: 5rem;
+  }
+  .w10 {
+    min-width: 10rem;
+  }
+  .w15 {
+    min-width: 15rem;
+  }
+  .w20 {
+    min-width: 20rem;
+  }
+  .w30 {
+    min-width: 30rem;
+  }
+  .change{
+    background: rgb(208, 236, 162);
+  }
+  .fz10 {
+    font-size: 0.8rem;
+  }
+  fieldset {
+    background-color: rgb(211, 192, 229);
+    border: none;
+  }
+  .img-tm{
+    margin-right: 2rem;
+    max-width: 10rem;
+    height: auto;
   }

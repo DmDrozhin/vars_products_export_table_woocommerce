@@ -1,0 +1,85 @@
+﻿1.	{DoorType: 'PanelDoors', TM: 'TM «LEADOR»', FilmTM: 'TM «LAMITEX» (Italy)', Model: 'ASTI 
+GLASS', Edge: Array(3), …}
+
+1.	Categories: "Міжкімнатні двері> TM «LEADOR»> ASTI GLASS, Міжкімнатні двері> TM 
+    «LEADOR», Міжкімнатні двері> TM «LEADOR»> Бетон білий, Міжкімнатні двері> Щитові двері, 
+    Міжкімнатні двері> Вертикальні лінії, Міжкімнатні двері> Стиль модерн, Міжкімнатні 
+    двері> TM «LAMITEX» (Italy), Міжкімнатні двері> «телескоп», Міжкімнатні двері> Без скла 
+    - «глухе» полотно, Міжкімнатні двері> З декор. накладками"
+2.	DecSet: Array(3)
+  	0: "Сіре дерево, горизонтальний"
+  	1: "Монблан, горизонтальний"
+  	2: "Бетон білий"
+  	length: 3
+  	__ob__: 
+    Observer {value: Array(3), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+3.	Decor: "Бетон білий"
+4. 	DoorCases: Array(3)
+  	0: "Без коробки"
+    1: "80 мм дерево/МДФ \"телескоп\" +2340 ₴"
+  	2: "100 мм дерево/МДФ \"телескоп\" +2695 ₴"
+  	length: 3
+  	__ob__: 
+    Observer {value: Array(3), shallow: false, mock: false, dep: Dep, vmCount: 0}
+  	[[Prototype]]: Array
+5.	DoorExtensions: Array(3)
+    0: "Без добірної дошки"
+    1: "100 мм \"телескоп\" +1075 ₴"
+    2: "200 мм \"телескоп\" +2145 ₴"
+    length: 3
+    __ob__: 
+    Observer {value: Array(3), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+6.	DoorJambs: Array(3)
+    0: "Без лиштви"
+    1: "з крилом 30/20 на 2-і сторони \"телескоп\" +1970 ₴"
+    2: "з крилом 30/20 сторона 1 та 40/50 сторона 2 \"телескоп\" +2093 ₴"
+    length: 3
+    __ob__: 
+    Observer {value: Array(3), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+7.	DoorPrice: Array(2)
+    0: Edge1: 4498
+    1: Edge2: 4997
+    length: 2
+    __ob__: 
+    Observer {value: Array(2), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+8.	DoorType: "PanelDoors"
+9.	Edge: Array(3)
+    0: "Звичайна кромка"
+    1: "Чорна глянцева кромка"
+    2: "Алюмінієва кромка"
+    length: 3
+    [[Prototype]]: Array(0)
+10.	FilmTM: "TM «LAMITEX» (Italy)"
+11.	GlassSet: Array(1)
+    0: "Без скла - «глухе» полотно"
+    length: 1
+    __ob__: 
+    Observer {value: Array(1), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+12.	ID: 3
+13.	Model: "ASTI GLASS"
+14.	Modern: true
+15.	OnLay: Array(1)
+    0: "Lacobel чорне скло"
+    length: 1
+    __ob__: 
+    Observer {value: Array(1), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+16.	Panel: Array(1)
+    0: "Без фільонок"
+    length: 1
+    __ob__: 
+    Observer {value: Array(1), shallow: false, mock: false, dep: Dep, vmCount: 0}
+    [[Prototype]]: Array
+17.	Pics: Array(1)
+   	0: "https://www.okdveri.com.ua/wp-content/uploads/2023/04/leador-asti-glass-
+    bilyj-matovyj.jpg"
+  	length: 1
+  	[[Prototype]]: Array(0)
+18.	PriceGrp: "Decor1"
+19.	TM: "TM «LEADOR»"
+20.	VLines: true

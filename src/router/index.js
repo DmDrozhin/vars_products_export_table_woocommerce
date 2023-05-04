@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import DarumiTable from '../views/DARUMI-table'
-import DarumiConfig from '../views/DARUMI-config'
+import LeadorTable from '../views/LEADOR-table'
 
 Vue.use(VueRouter)
 
@@ -12,9 +12,9 @@ const routes = [
     component: DarumiTable
   },
   {
-    path: '/darumi_config',
-    name: 'Darumi_config',
-    component: DarumiConfig
+    path: '/Leador_config',
+    name: 'Leador_table',
+    component: LeadorTable
   }
 ]
 

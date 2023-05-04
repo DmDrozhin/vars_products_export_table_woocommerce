@@ -3,7 +3,7 @@
     <div class="flex-items">
       <img :src="logoIMG" class="img-tm"/>
       <h2>{{ Meta.TM }}</h2>
-    </div>
+  </div>
     <div style="font-size: .6rem;">CURRENT: {{ queryArgs }} *** {{ run }}</div>
       <fieldset class="flex-items">
         <button @click="refreshPage()">Refresh page</button>
@@ -15,7 +15,7 @@
         <select v-model="queryModel" :value="queryModel">
           <option v-for="model in modelQueryList" :key="model.id" :value="model">{{ model }}</option>
         </select>
-        <button @click="run=true">RUN</button>
+        <button @click="run = true">RUN</button>
         <div style="font-size: .6rem;">{{ queryModel }}</div>
     </fieldset>
     <h2></h2>
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import DoorVariables from '../components/DARUMI/DARUMI-Variables.vue'
-import DoorData from '../TM_DARUMI/DarumiDoors'
+import DoorVariables from '../components/LEADOR/LEADOR-Variables.vue'
+import DoorData from '../TM_LEADOR/LeadorDoors'
 export default {
   components: { DoorVariables },
   mixins: { DoorData },
@@ -62,15 +62,11 @@ export default {
       }
     },
     logoIMG () {
-      return require('../TM_DARUMI/DARUMI_logo.png')
+      return require('../TM_LEADOR/LEADOR_logo.png')
       // return require(this.Meta.Logo)
     }
   },
   methods: {
-    // runRequest () {
-    //   this.run = true
-    // },
-
     refreshPage () {
       this.$router.go(0)
     }
