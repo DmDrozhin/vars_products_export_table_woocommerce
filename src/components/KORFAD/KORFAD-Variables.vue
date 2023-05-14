@@ -9,13 +9,16 @@
           <td data-ID>{{ vrb.ID }}</td>
           <td data-variable>variable</td>
           <td></td>
-          <td class="w5 change">{{ vrb.Model }} {{ vrb.Decor }}</td>
+          <td class="w10 change">{{ vrb.Model }} {{ vrb.Decor }}</td>
           <td data-1>1</td><td data-0>0</td>
           <td data-visible>visible</td>
           <td data-price class="w15">
             Ціна за «Стандартне» полотно:
-            <span v-if="vrb.DoorType==='FrameDoors'">
-              <span class="door-price">{{ vrb.DoorPrice }} &#8372;. </span>
+            <span v-if="vrb.DoorType==='FrameDoors' && vrb.Model !== 'SANVITO SV-01 Glass'">
+              <span>{{ vrb.DoorPrice | priceNumber }} &#8372;. </span>
+            </span>
+            <span v-if="vrb.Model === 'SANVITO SV-01 Glass'">
+              від <span>{{ vrb.DoorPrice[0] | priceNumber }} &#8372; до {{ vrb.DoorPrice[1] | priceNumber }} &#8372;.</span>, в залежності від вибраного скла.
             </span>
             <span v-if="vrb.DoorType==='PanelDoors'">
               від <span class="door-price" >{{ vrb.DoorPrice[0] | edgePrice }} &#8372; до {{ vrb.DoorPrice[1] | edgePrice }} &#8372;.</span>, в залежності від вибраної кромки.
@@ -32,9 +35,9 @@
           <td></td><td></td><td></td><td></td>
           <td data-0>0</td>
           <td></td><td></td><td></td>
-          <td data-categories class="w30 change">{{ vrb.Categories }}</td>
+          <td data-categories class="w30 change">{{ vrb.Categories.join(', ') }}</td>
           <td></td><td></td>
-          <td data-pics class="w20 change">{{ vrb.Pics.join(', ') }}</td>
+          <td data-pics class="w30 change">{{ vrb.Pics.join(', ') }}</td>
           <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
           <td data-ID>{{ vrb.ID }}</td>
           <td data-size>Розмір</td>
@@ -45,7 +48,7 @@
             <span v-if="vrb.DoorType==='FrameDoors'">Скло</span>
             <span v-if="vrb.DoorType==='PanelDoors'">Декор. накладка</span>
           </td>
-          <td>
+          <td class="w15">
             <span v-if="vrb.DoorType==='FrameDoors'">{{ vrb.GlassSet.join(', ') }}</span>
             <span v-if="vrb.DoorType==='PanelDoors'">{{ vrb.OnLay.join(', ') }}</span>
           </td>
@@ -57,15 +60,15 @@
           <td data-door-case>Коробка</td>
           <td class="w10">{{vrb.DoorCases.join(', ') }}</td>
           <td data-1>1</td><td data-1>1</td>
-          <td data-def-door-case>{{ vrb.DoorCases[2] }}</td>
+          <td data-def-door-case>{{ vrb.DoorCases[1] }}</td>
           <td data-jumb>Лиштва</td>
           <td class="w15">{{ vrb.DoorJambs.join(', ') }}</td>
           <td data-1>1</td><td data-1>1</td>
-          <td data-def-jamb>{{ vrb.DoorJambs[2] }}</td>
+          <td data-def-jamb>{{ vrb.DoorJambs[1] }}</td>
           <td data-extension>Добірна дошка</td>
           <td class="w10">{{ vrb.DoorExtensions.join(', ') }}</td>
           <td data-1>1</td><td data-1>1</td>
-          <td data-def-extension>{{ vrb.DoorExtensions[0] }}</td>
+          <td data-def-extension>{{ vrb.DoorExtensions[1] }}</td>
           <td v-if="vrb.DoorType==='PanelDoors'">Кромка</td>
           <td v-if="vrb.DoorType==='PanelDoors'" class="w10">{{ vrb.Edge.join(', ') }}</td>
           <td v-if="vrb.DoorType==='PanelDoors'">1</td>
@@ -85,25 +88,24 @@
 
 <script>
 // ***************************************************************************
-import DoorData from '../../TM_DARUMI/DarumiDoors'
-import DoorIMGs from '../../TM_DARUMI/DarumiIMGs'
-import Molded from '../../TM_DARUMI/DarumiMoldedProducts'
-import DoorVariations from '../DARUMI/DARUMI-Variations.vue'
+import DoorData from '../../TM_KORFAD/KorfadDoors'
+import DoorIMGs from '../../TM_KORFAD/KorfadIMGs'
+import Molded from '../../TM_KORFAD/KorfadMoldedProducts'
+import DoorVariations from '../KORFAD/KORFAD-Variations.vue'
 export default {
-  mixins: [DoorData, DoorIMGs, Molded],
+  mixins: [DoorData, DoorIMGs, Molded, DoorIMGs],
   components: { DoorVariations },
   data () {
     return {
-      // headers: '',
       VariableProductData: [],
 
       Meta: DoorData.Meta,
       Decors: DoorData.Decors,
+      DoorIMGs,
       FrameDoors: DoorData.FrameDoors,
       PanelDoors: DoorData.PanelDoors,
-      DoorIMGs: DoorIMGs,
-      MoldSets: Object.entries(Molded.Variations),
       MoldPList: Molded.PriceList,
+      Variations: Molded.Variations,
       counter: 1
     }
   },
@@ -131,48 +133,77 @@ export default {
   methods: {
     handleRequest () {
       this.resetData()
-      // ******************* FRAME DOOR ***********************
       const resArr = [] // Main Array
       const Data1 = {}
       Data1.DoorType = this.currentType // 'FrameDoors'
       Data1.TM = this.Meta.TM
-      Data1.FilmTM = this.Meta.DecFilm
+      // Data1.FilmTM = this.Meta.DecFilm
       Data1.Model = this.qArgs.qModel
       const mData = Object.entries(this[this.currentType][this.qArgs.qModel])
+      // console.table(mData)
       Data1.Edge = this.setEdge(this.currentType, mData[0][1])
-      Data1.GlassSet = this.Decors[mData[2][1]]
-      Data1.Panel = this.Decors[mData[3][1]]
-      Data1.OnLay = this.Decors[mData[4][1]]
-      Data1.Modern = mData[5][1]
-      Data1.VLines = mData[6][1]
-      const arr = Object.keys(this.MoldPList) // Looping through these two Groups of decors
-      arr.forEach((dec, id) => {
-        const Data2 = { ...Data1 }
-        Data2.PriceGrp = dec
-        const DecorSet = this.Decors[mData[id][0]] // Array. 1-White Mat / or 0-Base colors
-        Data2.DoorPrice = mData[id][1] // Price for White Mat / or base color
-        Data2.DoorCases = this.MoldSets[id][1].DoorCase
-        Data2.DoorJambs = this.MoldSets[id][1].Jamb
-        Data2.DoorExtensions = this.MoldSets[id][1].Extension
-        Data2.DecSet = DecorSet
-        // console.log(Data2)
-        DecorSet.forEach(color => {
-          const Data3 = { ...Data2 }
-          Data3.ID = this.counter
-          this.counter = Data3.ID + 1
-          Data3.Decor = color
-          Data3.Categories = this.setCategory(Data3)
-          Data3.Pics = this.setImages(Data3.Model, color)
-          resArr.push(Data3)
-          // console.log(Data3)
+      // Data1.GlassSet = this.Decors[mData[2][1]]
+      Data1.Panel = this.Decors[mData[2][1]]
+      Data1.OnLay = this.Decors[mData[3][1]]
+      Data1.Modern = mData[4][1]
+      Data1.VLines = mData[5][1]
+      // console.log(mData[0][1]) // DecorSet - Price
+      const DecorSetArr = mData[0][1]
+      DecorSetArr.forEach(el => {
+        // console.log(Object.keys(el)[0])
+        const DecorSet = this.Decors[Object.keys(el)[0]]
+        DecorSet.forEach(dec => {
+          const Data2 = { ...Data1 }
+          Data2.Decor = dec
+          Data2.DoorPrice = Object.values(el)[0]
+          const DecorSet = Object.keys(el)[0]
+          const PriceGrp = this.setPriceGroupe(DecorSet)
+          Data2.PriceGrp = PriceGrp
+          Data2.DoorCases = this.Variations[PriceGrp].DoorCase
+          Data2.DoorJambs = this.Variations[PriceGrp].Jamb
+          Data2.DoorExtensions = this.Variations[PriceGrp].Extension
+          // Data2.DoorGlasses = this.Decors.Glasses[mData[1][1][0]]
+          Data2.GlassSet = this.Decors.Glasses[mData[1][1]]
+          Data2.Mirror = mData[1][1] === 'GlassSet2'
+          Data2.Triplex = mData[1][1] === 'GlassSet1'
+          Data2.Glass8mm = mData[1][1] === 'GlassSet3'
+          Data2.Pics = this.setImages(Data2.Model, dec)
+          Data2.FilmTM = this.setDecorFilmTM(DecorSet)
+          Data2.Categories = this.setCategory(Data2)
+          Data2.ID = this.counter
+          this.counter = Data2.ID + 1
+          resArr.push(Data2)
         })
       })
       this.VariableProductData = resArr
+      // console.log(resArr)
+    },
+
+    setPriceGroupe (DecorSet) {
+      if (DecorSet === 'DecorSet1') return 'Decor1'
+      else if (DecorSet === 'DecorSet2') return 'Decor2'
+      else if (DecorSet === 'DecorSet3') return 'Decor2'
+      else return 'Decor3'
+    },
+
+    setDecorFilmTM (DecorSet) {
+      const res = []
+      const arr = Object.entries(this.Meta.DecFilm)
+      arr.forEach((el, id) => {
+        if (el[1].includes(DecorSet)) {
+          res.push(el[0])
+        }
+      })
+      return res
     }
   },
+
   filters: {
     edgePrice (val) {
       return (Object.values(val)).join(', ')
+    },
+    priceNumber (val) {
+      return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     }
   }
 }

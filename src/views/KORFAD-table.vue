@@ -3,11 +3,12 @@
     <div class="flex-items">
       <img :src="logoIMG" class="img-tm"/>
       <h2>{{ Meta.TM }}</h2>
-      <div style="font-size: .6rem;">CURRENT: {{ queryArgs }} *** {{ run }}</div>
+      <div class="asist-text">CURRENT: {{ queryArgs }} *** {{ run }}</div>
+      <router-link :to="{path:'/Korfad_table/assistant'}" class="vue-a"><button @click="resetData()">Assistant</button></router-link>
     </div>
       <fieldset class="flex-items">
         <button @click="refreshPage()">Refresh page</button>
-        <div style="font-size: .6rem;">*{{ currentType }}*</div>
+        <div class="asist-text">*{{ currentType }}*</div>
         <select v-model="currentType" :value="currentType">
           <option value="FrameDoors">Frame doors</option>
           <option value="PanelDoors">Panel doors</option>
@@ -15,17 +16,17 @@
         <select v-model="queryModel" :value="queryModel">
           <option v-for="model in modelQueryList" :key="model.id" :value="model">{{ model }}</option>
         </select>
-        <button @click="run=true">RUN</button>
+        <button @click="run = true">RUN</button>
         <div style="font-size: .6rem;">{{ queryModel }}</div>
-    </fieldset>
-    <h2></h2>
+      </fieldset>
     <DoorVariables :qArgs="queryArgs" :run="run" @runReset="run=false" :currentType="currentType"></DoorVariables>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import DoorVariables from '../components/DARUMI/DARUMI-Variables.vue'
-import DoorData from '../TM_DARUMI/DarumiDoors'
+import DoorVariables from '../components/KORFAD/KORFAD-Variables.vue'
+import DoorData from '../TM_KORFAD/KorfadDoors'
 export default {
   components: { DoorVariables },
   mixins: { DoorData },
@@ -35,6 +36,7 @@ export default {
       FrameDoors: DoorData.FrameDoors,
       PanelDoors: DoorData.PanelDoors,
       modelQueryList: Object.keys(DoorData.FrameDoors),
+      Decors: DoorData.Decors,
       currentType: 'FrameDoors',
       queryModel: Object.keys(DoorData.FrameDoors)[0],
       run: false
@@ -62,7 +64,7 @@ export default {
       }
     },
     logoIMG () {
-      return require('../TM_DARUMI/DARUMI_logo.png')
+      return require('../TM_KORFAD/KORFAD_logo.png')
       // return require(this.Meta.Logo)
     }
   }

@@ -80,6 +80,9 @@
     border: 1px dotted yellowgreen;
     border-radius: 0.3rem;
   }
+  .asist-text {
+    font-size: .6rem;
+  }
   /* =============================================== */
   .green{
     border: 3px solid green;

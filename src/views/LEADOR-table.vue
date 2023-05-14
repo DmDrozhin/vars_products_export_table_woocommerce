@@ -3,8 +3,8 @@
     <div class="flex-items">
       <img :src="logoIMG" class="img-tm"/>
       <h2>{{ Meta.TM }}</h2>
+      <div style="font-size: .6rem;">CURRENT: {{ queryArgs }} *** {{ run }}</div>
   </div>
-    <div style="font-size: .6rem;">CURRENT: {{ queryArgs }} *** {{ run }}</div>
       <fieldset class="flex-items">
         <button @click="refreshPage()">Refresh page</button>
         <div style="font-size: .6rem;">*{{ currentType }}*</div>
@@ -18,7 +18,6 @@
         <button @click="run = true">RUN</button>
         <div style="font-size: .6rem;">{{ queryModel }}</div>
     </fieldset>
-    <h2></h2>
     <DoorVariables :qArgs="queryArgs" :run="run" @runReset="run=false" :currentType="currentType"></DoorVariables>
   </div>
 </template>
@@ -64,11 +63,6 @@ export default {
     logoIMG () {
       return require('../TM_LEADOR/LEADOR_logo.png')
       // return require(this.Meta.Logo)
-    }
-  },
-  methods: {
-    refreshPage () {
-      this.$router.go(0)
     }
   }
 }

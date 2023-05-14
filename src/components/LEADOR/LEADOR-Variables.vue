@@ -101,8 +101,6 @@ export default {
       Decors: DoorData.Decors,
       FrameDoors: DoorData.FrameDoors,
       PanelDoors: DoorData.PanelDoors,
-      FrameHeaders: DoorData.FrameDoorsTableHeaders,
-      PanelHeaders: DoorData.PanelDoorsTableHeaders,
       DoorIMGs: DoorIMGs,
       MoldSets: Object.entries(Molded.Variations),
       MoldPList: Molded.PriceList,
@@ -116,7 +114,7 @@ export default {
   },
   computed: {
     headers () {
-      return this.currentType === 'FrameDoors' ? this.FrameHeaders : this.PanelHeaders
+      return this.currentType === 'FrameDoors' ? this.FrameDoorsTableHeaders : this.PanelDoorsTableHeaders
     }
   },
   watch: {
@@ -133,7 +131,6 @@ export default {
   methods: {
     handleRequest () {
       this.resetData()
-      // ******************* FRAME DOOR ***********************
       const resArr = [] // Main Array
       const Data1 = {}
       Data1.DoorType = this.currentType // 'FrameDoors'
@@ -170,19 +167,6 @@ export default {
         })
       })
       this.VariableProductData = resArr
-    },
-    resetData () {
-      this.VariableProductData = []
-      this.counter = 1
-      this.$emit('runReset')
-    },
-
-    refreshPage () {
-      this.$router.go(0)
-    },
-
-    thoughErr () {
-      throw new Error('"***Error***')
     }
   },
   filters: {

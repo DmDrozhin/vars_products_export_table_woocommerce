@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import MutualData from './MUTUAL/VariableFns'
+import store from './STORE/store'
 
 import './styles/main.css'
 
@@ -10,5 +11,6 @@ Vue.mixin(MutualData)
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
