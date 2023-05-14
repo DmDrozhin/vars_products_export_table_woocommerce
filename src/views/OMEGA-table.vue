@@ -2,7 +2,7 @@
   <div>
     <div class="flex-items"></div>
       <!-- <img :src="logoIMG" class="img-tm"/> -->
-      <!-- <span>{{ yyy }}</span></div> -->
+      <span>{{ yyy }}</span></div>
       <!-- <h2>{{ Meta.TM }}</h2> -->
       <!-- <div class="asist-text">CURRENT: {{ queryArgs }} *** {{ run }}</div>
       <router-link :to="{path:'/Korfad_table/assistant'}" class="vue-a"><button @click="resetData()">Assistant</button></router-link>
@@ -22,18 +22,19 @@
       </fieldset>
     <DoorVariables :qArgs="queryArgs" :run="run" @runReset="run=false" :currentType="currentType"></DoorVariables>
     <router-view></router-view> -->
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
 // import DoorVariables from '../components/OMEGA/OMEGA-Variables.vue'
 import DoorData from '../TM_OMEGA/OmegaDoors'
+import { mapState } from 'vuex'
 export default {
   // components: { DoorVariables },
   mixins: { DoorData },
   data () {
     return {
-      yyy: this.$store.Omega.state.MSG,
+      // yyy: this.$store.state.MSG,
       Meta: DoorData.Meta,
       // FrameDoors: DoorData.FrameDoors,
       PanelDoors: DoorData.PanelDoors,
@@ -58,17 +59,21 @@ export default {
   },
   computed: {
     // FrameDoorList () { return Object.keys(this.FrameDoors) },
-    PanelDoorList () { return Object.keys(this.PanelDoors) },
-    queryArgs () {
-      return {
-        qModel: this.queryModel,
-        qType: this.currentType
-      }
-    }
+    // PanelDoorList () { return Object.keys(this.PanelDoors) },
+    // queryArgs () {
+    //   return {
+    //     qModel: this.queryModel,
+    //     qType: this.currentType
+    //   }
+    // },
     // logoIMG () {
     //   return require('../TM_OMEGA/OMEGA_logo.jpg')
     //   // return require(this.Meta.Logo)
     // }
+    ...mapState(['MSG']),
+    yyy () {
+      return this.MSG + ' world'
+    }
   }
 }
 </script>
