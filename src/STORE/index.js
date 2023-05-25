@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Omega from '../STORE/OmegaDoors.js'
+// import Omega from './OmegaDoors.js'
 
 Vue.use(Vuex)
 
@@ -14,5 +14,7 @@ export default new Vuex.Store({
   },
   getters: {
   },
-  modules: { Omega }
+  modules: {
+    // Omega
+  }
 })

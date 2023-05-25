@@ -9,22 +9,12 @@
           <td data-ID>{{ vrb.ID }}</td>
           <td data-variable>variable</td>
           <td></td>
-          <td class="w10 change">{{ vrb.Model }} {{ vrb.Decor }}</td>
+          <td class="w10 change">{{ vrb.Model }}</td>
           <td data-1>1</td><td data-0>0</td>
           <td data-visible>visible</td>
           <td data-price class="w15">
-            Ціна за «Стандартне» полотно:
-            <span v-if="vrb.DoorType==='FrameDoors' && vrb.Model !== 'SANVITO SV-01 Glass'">
-              <span>{{ vrb.DoorPrice | priceNumber }} &#8372;. </span>
-            </span>
-            <span v-if="vrb.Model === 'SANVITO SV-01 Glass'">
-              від <span>{{ vrb.DoorPrice[0] | priceNumber }} &#8372; до {{ vrb.DoorPrice[1] | priceNumber }} &#8372;.</span>, в залежності від вибраного скла.
-            </span>
-            <span v-if="vrb.DoorType==='PanelDoors'">
-              від <span class="door-price" >{{ vrb.DoorPrice[0] | edgePrice }} &#8372; до {{ vrb.DoorPrice[1] | edgePrice }} &#8372;.</span>, в залежності від вибраної кромки.
-            </span>
-            <span>«Стандартні» полотна: &#8596; 400mm / 600mm / 700mm / 800mm / 900mm &#8597; 2000mm</span>
-          </td>
+            <span v-if="(vrb.DoorPrice).length > 1">Ціна за «Стандартне» полотно: від {{ vrb.DoorPrice[0] | priceNumber }} &#8372; до {{ vrb.DoorPrice[1] | priceNumber }} &#8372;. </span>
+            <span v-else>Ціна за «Стандартне» полотно: {{ vrb.DoorPrice[0] | priceNumber }} &#8372;. </span>{{ vrb.Description }}\n«Стандартні» полотна: &#8596; 400mm / 600mm / 700mm / 800mm / 900mm &#8597; 2000mm</td>
           <td></td>
           <td data-0>0</td><td data-0>0</td>
           <td data-taxable>taxable</td>
@@ -69,11 +59,16 @@
           <td class="w10">{{ vrb.DoorExtensions.join(', ') }}</td>
           <td data-1>1</td><td data-1>1</td>
           <td data-def-extension>{{ vrb.DoorExtensions[1] }}</td>
-          <td v-if="vrb.DoorType==='PanelDoors'">Кромка</td>
-          <td v-if="vrb.DoorType==='PanelDoors'" class="w10">{{ vrb.Edge.join(', ') }}</td>
-          <td v-if="vrb.DoorType==='PanelDoors'">1</td>
-          <td v-if="vrb.DoorType==='PanelDoors'">1</td>
-          <td v-if="vrb.DoorType==='PanelDoors'">{{ vrb.Edge[0] }}</td>
+          <td>Кромка</td>
+          <td class="w10">{{ vrb.Edge.join(', ') }}</td>
+          <td>1</td>
+          <td>1</td>
+          <td>{{ vrb.Edge[0] }}</td>
+          <td>Приховані завіси</td>
+          <td class="w10">{{ vrb.Hinges.join(', ') }}</td>
+          <td>1</td>
+          <td>1</td>
+          <td>{{ vrb.Hinges[0] }}</td>
           <td data-0>0</td>
           <td data-def>default</td>
           <td data-yoast1>{{ Meta.Yoast1 }}</td>
@@ -88,10 +83,10 @@
 
 <script>
 // ***************************************************************************
-import DoorData from '../../TM_KORFAD/KorfadDoors'
-import DoorIMGs from '../../TM_KORFAD/KorfadIMGs'
-import Molded from '../../TM_KORFAD/KorfadMoldedProducts'
-import DoorVariations from '../KORFAD/KORFAD-Variations.vue'
+import DoorData from '../../TM_OMEGA/OmegaDoors'
+import DoorIMGs from '../../TM_OMEGA/OmegaIMGs'
+import Molded from '../../TM_OMEGA/OmegaMoldedProducts'
+import DoorVariations from '../OMEGA/OMEGA-Variations.vue'
 export default {
   mixins: [DoorData, DoorIMGs, Molded, DoorIMGs],
   components: { DoorVariations },
@@ -116,7 +111,7 @@ export default {
   },
   computed: {
     headers () {
-      return this.currentType === 'FrameDoors' ? this.FrameDoorsTableHeaders : this.PanelDoorsTableHeaders
+      return this.currentType === 'FrameDoors' ? this.OmegaFrameDoorsTableHeaders : this.OmegaPanelDoorsTableHeaders
     }
   },
   watch: {
@@ -135,46 +130,37 @@ export default {
       this.resetData()
       const resArr = [] // Main Array
       const Data1 = {}
-      Data1.DoorType = this.currentType // 'FrameDoors'
+      Data1.DoorType = this.currentType // 'FrameDoors' or 'PanelDoors'
       Data1.TM = this.Meta.TM
-      // Data1.FilmTM = this.Meta.DecFilm
-      Data1.Model = this.qArgs.qModel
+      Data1.FilmTM = this.Meta.DecFilm
+      const Model = this.qArgs.qModel
+      Data1.Model = Model
       const mData = Object.entries(this[this.currentType][this.qArgs.qModel])
-      // console.table(mData)
-      Data1.Edge = this.setEdge(this.currentType, mData[0][1])
-      // Data1.GlassSet = this.Decors[mData[2][1]]
-      Data1.Panel = this.Decors[mData[2][1]]
-      Data1.OnLay = this.Decors[mData[3][1]]
-      Data1.Modern = mData[4][1]
-      Data1.VLines = mData[5][1]
-      // console.log(mData[0][1]) // DecorSet - Price
-      const DecorSetArr = mData[0][1]
-      DecorSetArr.forEach(el => {
-        // console.log(Object.keys(el)[0])
-        const DecorSet = this.Decors[Object.keys(el)[0]]
-        DecorSet.forEach(dec => {
-          const Data2 = { ...Data1 }
-          Data2.Decor = dec
-          Data2.DoorPrice = Object.values(el)[0]
-          const DecorSet = Object.keys(el)[0]
-          const PriceGrp = this.setPriceGroupe(DecorSet)
-          Data2.PriceGrp = PriceGrp
-          Data2.DoorCases = this.Variations[PriceGrp].DoorCase
-          Data2.DoorJambs = this.Variations[PriceGrp].Jamb
-          Data2.DoorExtensions = this.Variations[PriceGrp].Extension
-          // Data2.DoorGlasses = this.Decors.Glasses[mData[1][1][0]]
-          Data2.GlassSet = this.Decors.Glasses[mData[1][1]]
-          Data2.Mirror = mData[1][1] === 'GlassSet2'
-          Data2.Triplex = mData[1][1] === 'GlassSet1'
-          Data2.Glass8mm = mData[1][1] === 'GlassSet3'
-          Data2.Pics = this.setImages(Data2.Model, dec)
-          Data2.FilmTM = this.setDecorFilmTM(DecorSet)
-          Data2.Categories = this.setCategory(Data2)
-          Data2.ID = this.counter
-          this.counter = Data2.ID + 1
-          resArr.push(Data2)
-        })
+      Data1.OnLay = []
+      Data1.SeriesOf = mData[0][1]
+      Data1.DoorPrice = mData[1][1]
+      mData[2][1].forEach(onlay => { // if there are several sets of on-lays > loop through arr
+        Data1.OnLay.push(...this.Decors[onlay])
       })
+      Data1.Decors = this.Decors[mData[3][1]]
+      Data1.Pics = this.setImages(this.qArgs.qModel)
+      Data1.GlassSet = this.Decors[mData[4][1]]
+      Data1.Panel = this.Decors[mData[5][1]]
+      Data1.Edge = this.setEdge(this.currentType, mData[6][1])
+      Data1.Modern = mData[7][1]
+      Data1.VLines = mData[8][1]
+      Data1.RAL = mData[9][1]
+      Data1.Description = this.Meta[mData[10][1]]
+      const PriceGrp = this.setPriceGroupe(mData[3][1])
+      Data1.PriceGrp = PriceGrp
+      Data1.DoorCases = this.Variations[PriceGrp].DoorCase
+      Data1.DoorJambs = this.Variations[PriceGrp].Jamb
+      Data1.DoorExtensions = this.Variations[PriceGrp].Extension
+      Data1.Decor = 'Фарбовані двері'
+      Data1.Categories = this.setCategory(Data1)
+      Data1.Hinges = this.Variations[PriceGrp].Hinges
+      Data1.ID = this.counter
+      resArr.push(Data1)
       this.VariableProductData = resArr
       // console.log(resArr)
     },

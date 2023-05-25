@@ -4,7 +4,7 @@
         <td data-id>{{ vrn.ID }}</td>
         <td data-variation>variation</td>
         <td></td>
-        <td data-model class="w5 change">{{ vrn.Model }} {{ vrn.Decor }}</td>
+        <td data-model class="w5 change">{{ vrn.Model }} </td>
         <td data-1>1</td>
         <td data-0>0</td>
         <td data-visible>visible</td>
@@ -30,10 +30,10 @@
         <td data-1>1</td>
         <td></td>
         <td data-glass>
-          <span v-if="currentType === 'FrameDoors'">Скло</span>
+          <span v-if="currentType === 'PanelDoors'">Декор. накладка</span>
         </td>
         <td>
-          <span v-if="currentType === 'FrameDoors'">{{ vrn.Glass }}</span>
+          <span v-if="currentType === 'PanelDoors'">{{ vrn.OnLay }}</span>
         </td>
         <td></td>
         <td data-1>1</td>
@@ -53,11 +53,16 @@
         <td></td>
         <td data-1>1</td>
         <td></td>
-        <td v-if="currentType === 'PanelDoors'">Кромка</td>
-        <td v-if="currentType === 'PanelDoors'">{{ vrn.Edge }}</td>
-        <td v-if="currentType === 'PanelDoors'"></td>
-        <td v-if="currentType === 'PanelDoors'">1</td>
-        <td v-if="currentType === 'PanelDoors'"></td>
+        <td>Кромка</td>
+        <td>{{ vrn.Edge }}</td>
+        <td></td>
+        <td>1</td>
+        <td></td>
+        <td>Приховані завіси</td>
+        <td>{{ vrn.Hinges }}</td>
+        <td></td>
+        <td>1</td>
+        <td></td>
         <td data-0>0</td>
         <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
       </tr>
@@ -66,8 +71,8 @@
 </template>
 
 <script>
-import MoldedPriceList from '../../TM_KORFAD/KorfadMoldedProducts'
-import DoorData from '../../TM_KORFAD/KorfadDoors'
+import MoldedPriceList from '../../TM_OMEGA/OmegaMoldedProducts'
+import DoorData from '../../TM_OMEGA/OmegaDoors'
 export default {
   data () {
     return {
@@ -101,54 +106,39 @@ export default {
       arr.forEach(obj => {
         // console.log(obj)
         // removing unused data from qArr objects (destruction)
-        const { Model, Decor, ID, OnLay, GlassSet, Pics, DoorPrice, PriceGrp } = obj
+        const { Model, ID, OnLay, DoorPrice, PriceGrp } = obj
         const Data1 = {}
-        Data1.Model = Model
-        Data1.Decor = Decor
-        Data1.OnLay = OnLay
         Data1.ParentID = ID
-        // console.log(Data1)
-        GlassSet.forEach((gls, GlassID) => {
-          Data1.Glass = gls
-          Data1.Image = Pics[GlassID]
-          if (Array.isArray(DoorPrice)) { // if the variation price depends on type of Edge etc.
-            const crntPrice = this.getCrntPrice(DoorPrice, gls)
-            const varArr = this.makeArrVarPricesKORFAD(PriceGrp, crntPrice)
+        Data1.Model = Model
+        if (Array.isArray(OnLay)) {
+          OnLay.forEach(onlay => {
+            const Data2 = { ...Data1 }
+            Data2.OnLay = onlay
+            const crntPrice = this.getCrntPrice(DoorPrice, onlay)
+            const varArr = this.makeArrVarPricesOMEGA(PriceGrp, crntPrice)
             varArr.forEach(it => {
-              const Data2 = { ...Data1 }
+              const Data3 = { ...Data2 }
               const moldedID = Number(Object.keys(it)[0])
-              Data2.ID = varNm
-              varNm = Data2.ID + 1
-              Data2.Marker = Object.keys(it)[0]
-              Data2.VrPrice = Math.round(Object.values(it)[0])
-              Data2.DoorFrame = this.Variations[PriceGrp].Combinations[moldedID][0]
-              Data2.DoorJamb = this.Variations[PriceGrp].Combinations[moldedID][1]
-              Data2.DoorExtension = this.Variations[PriceGrp].Combinations[moldedID][2]
-              resArr.push(Data2)
+              Data3.ID = varNm
+              varNm = Data3.ID + 1
+              Data3.Marker = Object.keys(it)[0]
+              Data3.VrPrice = Math.round(Object.values(it)[0])
+              Data3.DoorFrame = this.Variations[PriceGrp].Combinations[moldedID][0]
+              Data3.DoorJamb = this.Variations[PriceGrp].Combinations[moldedID][1]
+              Data3.DoorExtension = this.Variations[PriceGrp].Combinations[moldedID][2]
+              Data3.Hinges = this.Variations[PriceGrp].Combinations[moldedID][3]
+              resArr.push(Data3)
             })
-          } else {
-            const varArr = this.makeArrVarPricesKORFAD(PriceGrp, DoorPrice)
-            varArr.forEach(it => {
-              const Data4 = { ...Data1 }
-              const moldedID = Number(Object.keys(it)[0])
-              Data4.ID = varNm
-              varNm = Data4.ID + 1
-              Data4.Marker = Object.keys(it)[0]
-              Data4.VrPrice = Math.round(Object.values(it)[0])
-              Data4.DoorFrame = this.Variations[PriceGrp].Combinations[moldedID][0]
-              Data4.DoorJamb = this.Variations[PriceGrp].Combinations[moldedID][1]
-              Data4.DoorExtension = this.Variations[PriceGrp].Combinations[moldedID][2]
-              resArr.push(Data4)
-            })
-          }
-        })
+          })
+        }
       })
       // console.log(resArr)
       this.VariationsData = resArr
     },
-    getCrntPrice (price, glass) {
-      if (glass === 'Сатин білий 8мм') return price[0]
-      else return price[1]
+    getCrntPrice (price, onlay) {
+      if (this.Decors.OnLay1.includes(onlay)) { return price[0] }
+      if (this.Decors.OnLay2.includes(onlay)) { return price[0] }
+      if (this.Decors.OnLay3.includes(onlay)) { return price[1] }
     }
   }
 }
