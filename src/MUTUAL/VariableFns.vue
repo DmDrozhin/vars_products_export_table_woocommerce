@@ -212,10 +212,36 @@ export default {
 
       return arr
     },
+    makeArrVarPricesCITY (priceGR, doorPrice) { // priceGR = Decor1 etc
+      // console.log(priceGR)
+      const arr = []
+      const path = this.moldPList[priceGR]
+      // Compiling prices for molded products sets
+      const case80 = path.DoorCase.arr[0] * 2.5
+      const jamb = path.Jamb.arr[0] * 5
+      const ext90 = path.Extension.arr[0] * 2.5
+      const ext180 = path.Extension.arr[1] * 2.5
+      const hingeCRM = path.Hinges.arr[0]
+      const hingeBL = path.Hinges.arr[1]
+      // Calculating prices for each variation of molded products combinations
+      arr[0] = { 1: doorPrice }
+      arr.push({ 2: (doorPrice + case80 + jamb) })
+      arr.push({ 3: (doorPrice + case80 + jamb + ext90) })
+      arr.push({ 4: (doorPrice + case80 + jamb + ext180) })
+
+      arr.push({ 5: (doorPrice + case80 + jamb + hingeCRM) })
+      arr.push({ 6: (doorPrice + case80 + jamb + ext90 + hingeCRM) })
+      arr.push({ 7: (doorPrice + case80 + jamb + ext180 + hingeCRM) })
+
+      arr.push({ 8: (doorPrice + case80 + jamb + hingeBL) })
+      arr.push({ 9: (doorPrice + case80 + jamb + ext90 + hingeBL) })
+      arr.push({ 10: (doorPrice + case80 + jamb + ext180 + hingeBL) })
+      return arr
+    },
 
     setEdge (type, arr) {
       // console.log(type, ' and ', arr)
-      if (type === 'FrameDoors') return this.Decors.Edge1
+      if (type === 'FrameDoors' && arr[0] === 'Edge1') return this.Decors.Edge1
       else if (type === 'PanelDoors') {
         const res = []
         arr.forEach(el => {

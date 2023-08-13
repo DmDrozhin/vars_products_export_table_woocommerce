@@ -4,6 +4,7 @@ import DarumiTable from '../views/DARUMI-table'
 import LeadorTable from '../views/LEADOR-table'
 import KorfadTable from '../views/KORFAD-table'
 import OmegaTable from '../views/OMEGA-table'
+import CityTable from '../views/CITY-table'
 import KorfadAssist from '../views/KORFAD-assistant'
 
 Vue.use(VueRouter)
@@ -23,6 +24,11 @@ const routes = [
     path: '/Omega_table',
     name: 'Omega_table',
     component: OmegaTable
+  },
+  {
+    path: '/City_table',
+    name: 'City_table',
+    component: CityTable
   },
   {
     path: '/Korfad_table',

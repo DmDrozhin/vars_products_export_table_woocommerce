@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import DoorVariables from '../components/LEADOR/LEADOR-Variables.vue'
-import DoorData from '../TM_LEADOR/LeadorDoors'
+import DoorVariables from '../components/CITY/CITY-Variables.vue'
+import DoorData from '../TM_CITY/CityDoors'
 export default {
   components: { DoorVariables },
   mixins: { DoorData },
@@ -33,9 +33,10 @@ export default {
       Meta: DoorData.Meta,
       FrameDoors: DoorData.FrameDoors,
       PanelDoors: DoorData.PanelDoors,
-      modelQueryList: Object.keys(DoorData.FrameDoors),
-      currentType: 'FrameDoors',
-      queryModel: Object.keys(DoorData.FrameDoors)[0],
+      modelQueryList: Object.keys(DoorData.PanelDoors),
+      Decors: DoorData.Decors,
+      currentType: 'PanelDoors',
+      queryModel: Object.keys(DoorData.PanelDoors)[4],
       run: false
     }
   },
@@ -60,6 +61,8 @@ export default {
         qType: this.currentType
       }
     }
+  },
+  methods: {
   }
 }
 </script>

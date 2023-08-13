@@ -8,7 +8,7 @@ export default {
     },
     Yoast1: 'Двері KORFAD %%sep%% %%title%% %%sep%% +38 (099) 309-02-22',
     Yoast2: 'Якісні двері вироблені в Ураїні за італійськими технологіями. Переміум покриття - ⭐ ⭐ ⭐ ⭐ ⭐  LAMITEX (Italy) або Super PET (Japan)',
-    Logo: '../TM_KORFAD/KORFAD_logo.png'
+    Logo: require('../TM_KORFAD/KORFAD_logo.png')
   },
   Decors: {
     DecorSet1: ['Дуб білений', 'Венге', 'Горіх', 'Дуб грей', 'Дуб марсала'], // PND-01

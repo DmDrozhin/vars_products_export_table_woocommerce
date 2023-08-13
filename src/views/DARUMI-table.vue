@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex-items">
-      <img :src="logoIMG" class="img-tm"/>
+      <img :src="Meta.Logo" class="img-tm"/>
       <h2>{{ Meta.TM }}</h2>
       <div style="font-size: .6rem;">CURRENT: {{ queryArgs }} *** {{ run }}</div>
     </div>
@@ -60,10 +60,6 @@ export default {
         qModel: this.queryModel,
         qType: this.currentType
       }
-    },
-    logoIMG () {
-      return require('../TM_DARUMI/DARUMI_logo.png')
-      // return require(this.Meta.Logo)
     }
   }
 }

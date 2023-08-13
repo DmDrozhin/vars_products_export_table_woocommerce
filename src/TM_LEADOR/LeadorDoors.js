@@ -4,7 +4,7 @@ export default {
     DecFilm: 'TM «LAMITEX» (Italy)',
     Yoast1: 'Двері LEADOR %%sep%% %%title%% %%sep%% +38 (099) 309-02-22',
     Yoast2: 'Якісні двері вироблені в Україні за італійськими   технологіями. Зносостійке декоративне покриття - LAMITEX (Italy). Співвідношення ціна /   якість ⭐ ⭐ ⭐ ⭐ ⭐',
-    Logo: '../TM_LEADOR/LEADOR_logo.png'
+    Logo: require('../TM_LEADOR/LEADOR_logo.png')
   },
   Decors: {
   // Sets of decors. Can applied to certain door model and specified in price list from factory

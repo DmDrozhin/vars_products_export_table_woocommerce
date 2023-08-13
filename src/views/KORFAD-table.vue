@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex-items">
-      <img :src="logoIMG" class="img-tm"/>
+      <img :src="Meta.Logo" class="img-tm"/>
       <h2>{{ Meta.TM }}</h2>
       <div class="asist-text">CURRENT: {{ queryArgs }} *** {{ run }}</div>
       <router-link :to="{path:'/Korfad_table/assistant'}" class="vue-a"><button @click="resetData()">Assistant</button></router-link>
@@ -62,10 +62,6 @@ export default {
         qModel: this.queryModel,
         qType: this.currentType
       }
-    },
-    logoIMG () {
-      return require('../TM_KORFAD/KORFAD_logo.png')
-      // return require(this.Meta.Logo)
     }
   }
 }
